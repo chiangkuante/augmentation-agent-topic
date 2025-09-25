@@ -10,13 +10,14 @@ import pickle
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from typing import List, Tuple, Optional, Dict, Any, Union
+from typing import List, Tuple, Optional, Dict, Any, Union, Set
 from datetime import datetime
 import warnings
 
 # Core ML libraries
 from sklearn.metrics import silhouette_score
 from sentence_transformers import SentenceTransformer
+from sklearn.feature_extraction.text import CountVectorizer
 import umap
 import hdbscan
 
@@ -31,6 +32,7 @@ from config.settings import (
     EMBEDDING_MODELS, TOPIC_MODEL_CONFIG, UMAP_CONFIG,
     HDBSCAN_CONFIG, RESULTS_DIR
 )
+from src.data_loader import get_stopwords
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +47,11 @@ def create_initial_topics(
     save_path: Optional[str] = None,
     batch_size: int = 32,
     use_gpu: bool = False,
+    stopword_languages: Optional[List[str]] = None,
+    custom_stopwords: Optional[Union[Set[str], List[str]]] = None,
+    vectorizer_min_df: int = 2,
+    vectorizer_max_df: float = 0.95,
+    vectorizer_ngram_range: Tuple[int, int] = (1, 2),
     **kwargs
 ) -> Tuple[BERTopic, pd.DataFrame, Dict[str, Any]]:
     """
@@ -57,6 +64,11 @@ def create_initial_topics(
         save_path: Path to save the model (if None, auto-generates)
         batch_size: Batch size for embedding computation
         use_gpu: Whether to use GPU if available
+        stopword_languages: Languages to use for vectorizer stopwords
+        custom_stopwords: Additional stopwords to filter during vectorization
+        vectorizer_min_df: Minimum document frequency for vectorizer terms
+        vectorizer_max_df: Maximum document frequency for vectorizer terms
+        vectorizer_ngram_range: N-gram range for vectorizer
         **kwargs: Additional parameters for BERTopic
 
     Returns:
@@ -86,13 +98,35 @@ def create_initial_topics(
         # Phase-specific model loading
         embeddings = _load_embedding_model(embedding_model, use_gpu, batch_size)
 
+        # Prepare vectorizer stopwords
+        if stopword_languages is None:
+            stopword_languages = ["english"]
+        if isinstance(stopword_languages, str):
+            stopword_languages = [stopword_languages]
+
+        custom_stopwords_set = set(custom_stopwords) if custom_stopwords else None
+        stopword_set: Set[str] = get_stopwords(
+            stopword_languages,
+            custom_stopwords_set
+        )
+
+        vectorizer = CountVectorizer(
+            stop_words=list(stopword_set),
+            ngram_range=vectorizer_ngram_range,
+            min_df=vectorizer_min_df,
+            max_df=vectorizer_max_df
+        )
+
         # Generate embeddings with progress tracking
         logger.info("Generating document embeddings...")
         document_embeddings = _generate_embeddings(documents, embeddings, batch_size)
 
         # Create BERTopic model
         logger.info("Creating BERTopic model...")
-        topic_model = _create_bertopic_model(**kwargs)
+        topic_model = _create_bertopic_model(
+            vectorizer_model=vectorizer,
+            **kwargs
+        )
 
         # Fit the model
         logger.info("Fitting topic model...")
@@ -119,7 +153,14 @@ def create_initial_topics(
             "model_config": {
                 "umap_params": UMAP_CONFIG,
                 "hdbscan_params": HDBSCAN_CONFIG,
-                "topic_params": TOPIC_MODEL_CONFIG
+                "topic_params": TOPIC_MODEL_CONFIG,
+                "vectorizer_params": {
+                    "min_df": vectorizer_min_df,
+                    "max_df": vectorizer_max_df,
+                    "ngram_range": vectorizer_ngram_range,
+                    "stopword_languages": stopword_languages,
+                    "custom_stopwords_count": len(custom_stopwords_set) if custom_stopwords_set else 0
+                }
             }
         }
 
@@ -148,14 +189,19 @@ def _load_embedding_model(model_name: str, use_gpu: bool, batch_size: int) -> Se
     try:
         if "ModernBERT" in model_name:
             # Phase 2/3: ModernBERT integration
-            logger.info("Loading ModernBERT model (Phase 2/3)")
-            # For now, fall back to sentence-transformers until custom wrapper is ready
-            logger.warning("ModernBERT not yet implemented, falling back to all-mpnet-base-v2")
-            model_name = "sentence-transformers/all-mpnet-base-v2"
-
-        # Phase 1: Standard sentence-transformers
-        logger.info(f"Loading sentence-transformer model: {model_name}")
-        model = SentenceTransformer(model_name)
+            logger.info(f"Loading ModernBERT model: {model_name}")
+            try:
+                # Try to load ModernBERT model directly
+                model = SentenceTransformer(model_name, trust_remote_code=True)
+                logger.info("Successfully loaded ModernBERT model")
+            except Exception as e:
+                logger.warning(f"Failed to load ModernBERT ({e}), falling back to all-mpnet-base-v2")
+                model_name = "sentence-transformers/all-mpnet-base-v2"
+                model = SentenceTransformer(model_name)
+        else:
+            # Phase 1: Standard sentence-transformers
+            logger.info(f"Loading sentence-transformer model: {model_name}")
+            model = SentenceTransformer(model_name)
 
         if use_gpu:
             try:
@@ -191,7 +237,10 @@ def _generate_embeddings(documents: List[str], model: SentenceTransformer, batch
         logger.error(f"Failed to generate embeddings: {e}")
         raise TopicModelingError(f"Embedding generation failed: {e}")
 
-def _create_bertopic_model(**kwargs) -> BERTopic:
+def _create_bertopic_model(
+    vectorizer_model: Optional[CountVectorizer] = None,
+    **kwargs
+) -> BERTopic:
     """Create a configured BERTopic model."""
     # Merge default config with any overrides
     config = {**TOPIC_MODEL_CONFIG, **kwargs}
@@ -206,6 +255,8 @@ def _create_bertopic_model(**kwargs) -> BERTopic:
     topic_model = BERTopic(
         umap_model=umap_model,
         hdbscan_model=hdbscan_model,
+        vectorizer_model=vectorizer_model,
+        ctfidf_model=ClassTfidfTransformer(reduce_frequent_words=True),
         top_n_words=10,
         verbose=config.get("verbose", True),
         calculate_probabilities=config.get("calculate_probabilities", True),

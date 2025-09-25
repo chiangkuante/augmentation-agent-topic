@@ -24,12 +24,20 @@ Your final output must be a JSON array of action objects. For example:
 
 If no actions are needed, return an empty array: []
 
-JSON Output:"""
+Output Requirements:
+- Respond with JSON only.
+- Do not include markdown code fences or explanatory text outside the JSON.
+
+Final JSON:"""
 
 # Topic naming and summary prompt
 TOPIC_NAMING_PROMPT = """You are an expert in topic analysis. Given the following keywords from a topic, provide a clear name and summary.
 
 Keywords: {keywords}
+
+Output Requirements:
+- Respond with JSON only.
+- Do not include markdown code fences or explanatory text outside the JSON.
 
 Please provide your response in the following JSON format:
 {{
@@ -37,7 +45,7 @@ Please provide your response in the following JSON format:
   "summary": "A brief summary explaining what this topic represents (max 2 sentences)"
 }}
 
-JSON Output:"""
+Final JSON:"""
 
 # Topic quality evaluation prompt
 QUALITY_EVALUATION_PROMPT = """You are an expert in topic quality assessment. Please evaluate the quality of this topic based on its name and keywords.
@@ -50,6 +58,10 @@ Please assess the topic on the following criteria and provide scores from 1-10:
 1. **Coherence** (1-10): How well do the keywords relate to each other and the topic name?
 2. **Uniqueness** (1-10): How distinct is this topic from other potential topics?
 
+Output Requirements:
+- Respond with JSON only.
+- Do not include markdown code fences or explanatory text outside the JSON.
+
 Please provide your response in the following JSON format:
 {{
   "coherence": <score_1_to_10>,
@@ -57,7 +69,7 @@ Please provide your response in the following JSON format:
   "reason": "Brief explanation of your scoring (max 2 sentences)"
 }}
 
-JSON Output:"""
+Final JSON:"""
 
 # Resilience mapping prompts
 RESILIENCE_MAPPING_PROMPT = """You are an expert in digital resilience assessment. Your task is to map the following topic to the appropriate digital resilience dimensions.
@@ -76,6 +88,10 @@ Digital Resilience Framework:
 
 Please classify this topic into one or more resilience dimensions and provide confidence scores.
 
+Output Requirements:
+- Respond with JSON only.
+- Do not include markdown code fences or explanatory text outside the JSON.
+
 Your response must be in the following JSON format:
 {{
   "dimensions": {{
@@ -87,7 +103,7 @@ Your response must be in the following JSON format:
   "reasoning": "Brief explanation of your classification (max 3 sentences)"
 }}
 
-JSON Output:"""
+Final JSON:"""
 
 # Batch topic analysis prompt for cost efficiency
 BATCH_OPTIMIZATION_PROMPT = """You are an expert in topic model optimization. Your task is to analyze the following batch of topics and suggest optimization actions.
@@ -129,13 +145,18 @@ Provide your analysis and recommendations in JSON format:
 
 If no actions are needed, set "recommendations" to an empty array.
 
-JSON Output:"""
+Output Requirements:
+- Respond with JSON only.
+- Do not include markdown code fences or explanatory text outside the JSON.
 
-# System prompts for different LLM models
+Final JSON:"""
+
+# System prompts for different LLM models (GPT-5 series only)
 SYSTEM_PROMPTS = {
-    "gpt-4": "You are a precise and analytical expert in natural language processing and topic modeling. Provide accurate, structured responses in JSON format as requested.",
-    "gpt-3.5-turbo": "You are an expert in topic analysis. Always respond in the exact JSON format requested. Be concise and accurate.",
-    "local": "You are an expert assistant. Respond only in the requested JSON format without any additional text."
+    "gpt-5": "You are a precise and analytical expert in natural language processing and topic modeling. Provide accurate, structured responses in JSON format as requested.",
+    "gpt-5-mini": "You are an expert in topic analysis. Always respond in the exact JSON format requested. Be concise and accurate.",
+    "gpt-5-nano": "You are an expert in topic analysis. Respond with valid JSON only, matching the requested schema exactly. Do not add markdown fences, explanations, or extra fields. Be precise and concise.",
+    "gpt-5-nano-2025-08-07": "You are an expert in topic analysis. Respond with valid JSON only, matching the requested schema exactly. Do not add markdown fences, explanations, or extra fields. Be precise and concise."
 }
 
 def get_prompt_template(prompt_type: str, **kwargs) -> str:
@@ -167,4 +188,4 @@ def get_system_prompt(model_name: str) -> str:
     for key in SYSTEM_PROMPTS:
         if key in model_name.lower():
             return SYSTEM_PROMPTS[key]
-    return SYSTEM_PROMPTS["gpt-4"]  # Default
+    return SYSTEM_PROMPTS["gpt-5"]  # Default

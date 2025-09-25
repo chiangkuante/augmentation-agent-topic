@@ -134,7 +134,7 @@ The system uses **dotenv** for comprehensive environment management:
 # API Configuration
 OPENAI_API_KEY=your-key-here
 MAX_API_BUDGET=50.0
-DEFAULT_LLM_MODEL=gpt-4
+DEFAULT_LLM_MODEL=gpt-5
 
 # Optimization Settings
 MAX_OPTIMIZATION_ITERATIONS=5
@@ -175,7 +175,7 @@ The system includes comprehensive cost controls:
 
 Example cost-controlled run:
 ```bash
-python src/main.py --budget 25.0 --model gpt-3.5-turbo --max-iterations 3
+python src/main.py --model gpt-5-nano-2025-08-07 --max-iterations 3
 ```
 
 ## 🎚️ Usage Examples
@@ -197,14 +197,14 @@ python src/main.py \
   --env production \
   --budget 100.0 \
   --max-iterations 10 \
-  --model gpt-4
+  --model gpt-5
 ```
 
 ### Custom Configuration
 ```bash
 # Cost-optimized run
 python src/main.py \
-  --model gpt-3.5-turbo \
+  --model gpt-5-nano-2025-08-07 \
   --budget 25.0 \
   --convergence-threshold 0.05 \
   --skip-optimization

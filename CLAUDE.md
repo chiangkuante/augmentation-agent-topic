@@ -101,7 +101,7 @@ This script will:
 - **Run full pipeline:** `python src/main.py`
 - **Development test run:** `python src/main.py --env development --sample-size 100`
 - **Production run:** `python src/main.py --env production --budget 100.0`
-- **Custom configuration:** `python src/main.py --model gpt-3.5-turbo --budget 25.0 --max-iterations 3`
+- **Custom configuration:** `python src/main.py --model gpt-5-mini --max-iterations 3`
 
 #### Maintenance
 - **Install additional packages:** `mamba install <package_name>`
@@ -173,9 +173,9 @@ Please implement the following modules in order.
 ### 3. `src/llm_agent.py`
 - **Purpose:** This module contains the core intelligence of the framework. It uses an LLM to analyze and suggest optimizations for the topic model.
 - **Key Class/Function:** `LLMAgent` class.
-- `__init__(self, api_key, model_name="gpt-4", temperature=0.1, max_retries=3)`:
+- `__init__(self, api_key, model_name="gpt-5", temperature=0.1, max_retries=3)`:
   - Initializes the OpenAI client with configurable model selection
-  - Supports models: `gpt-4`, `gpt-3.5-turbo`, `gpt-4-turbo`
+  - Supports models: `gpt-5`, `gpt-5-mini`, `gpt-5-nano-2025-08-07`
   - Temperature parameter for output stability (default: 0.1)
   - Built-in retry mechanism for API failures
 - `get_topic_name_and_summary(self, keywords)`: Takes a list of keywords and returns a JSON object `{"name": "...", "summary": "..."}`.

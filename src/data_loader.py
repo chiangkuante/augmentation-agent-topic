@@ -8,19 +8,142 @@ from CSV files with proper error handling and data validation.
 import logging
 import pandas as pd
 from pathlib import Path
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Set, Union
 import warnings
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def load_corpus(file_path: str, encoding: Optional[str] = None) -> pd.DataFrame:
+def _ensure_nltk_data():
+    """Ensure required NLTK data is downloaded."""
+    try:
+        nltk.data.find('tokenizers/punkt')
+    except LookupError:
+        logger.info("Downloading NLTK punkt tokenizer...")
+        nltk.download('punkt', quiet=True)
+
+    try:
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        logger.info("Downloading NLTK stopwords...")
+        nltk.download('stopwords', quiet=True)
+
+def get_stopwords(languages: Union[str, List[str]] = 'english',
+                  custom_stopwords: Optional[Set[str]] = None) -> Set[str]:
     """
-    Load and preprocess the corpus data from CSV file.
+    Get stopwords for specified language(s) with optional custom additions.
+
+    Args:
+        languages: Language code(s) for stopwords ('english', 'chinese', etc.)
+                  Can be a string or list of strings
+        custom_stopwords: Additional custom stopwords to include
+
+    Returns:
+        Set of stopwords
+    """
+    _ensure_nltk_data()
+
+    if isinstance(languages, str):
+        languages = [languages]
+
+    stop_words = set()
+
+    # Add NLTK stopwords for each language
+    for lang in languages:
+        try:
+            lang_stopwords = set(stopwords.words(lang))
+            stop_words.update(lang_stopwords)
+            logger.debug(f"Added {len(lang_stopwords)} {lang} stopwords")
+        except OSError:
+            logger.warning(f"Stopwords not available for language: {lang}")
+
+    # Add common financial/business stopwords
+    financial_stopwords = {
+        'company', 'companies', 'business', 'businesses', 'corporation', 'corp',
+        'inc', 'ltd', 'llc', 'llp', 'organization', 'org', 'management', 'team',
+        'year', 'years', 'quarter', 'quarters', 'month', 'months', 'period',
+        'fiscal', 'financial', 'revenue', 'sales', 'million', 'billion',
+        'report', 'reporting', 'section', 'item', 'page', 'table', 'figure',
+        'see', 'also', 'including', 'include', 'includes', 'may', 'could',
+        'would', 'should', 'might', 'must', 'shall', 'will', 'can', 'cannot'
+    }
+    stop_words.update(financial_stopwords)
+
+    # Add custom stopwords if provided
+    if custom_stopwords:
+        stop_words.update(custom_stopwords)
+        logger.debug(f"Added {len(custom_stopwords)} custom stopwords")
+
+    logger.info(f"Total stopwords loaded: {len(stop_words)}")
+    return stop_words
+
+def remove_stopwords(text: str,
+                    stopwords_set: Set[str],
+                    min_word_length: int = 2,
+                    preserve_numbers: bool = True) -> str:
+    """
+    Remove stopwords from text while preserving meaningful content.
+
+    Args:
+        text: Input text to process
+        stopwords_set: Set of stopwords to remove
+        min_word_length: Minimum length for words to keep
+        preserve_numbers: Whether to preserve numeric values
+
+    Returns:
+        Processed text with stopwords removed
+    """
+    if not text or not isinstance(text, str):
+        return ""
+
+    # Tokenize the text
+    try:
+        tokens = word_tokenize(text.lower())
+    except:
+        # Fallback to simple split if tokenization fails
+        tokens = re.findall(r'\b\w+\b', text.lower())
+
+    filtered_tokens = []
+
+    for token in tokens:
+        # Skip if it's a stopword
+        if token in stopwords_set:
+            continue
+
+        # Skip very short words unless they're numbers
+        if len(token) < min_word_length:
+            if preserve_numbers and token.isdigit():
+                filtered_tokens.append(token)
+            continue
+
+        # Skip pure punctuation
+        if not any(c.isalnum() for c in token):
+            continue
+
+        filtered_tokens.append(token)
+
+    return ' '.join(filtered_tokens)
+
+def load_corpus(file_path: str,
+               encoding: Optional[str] = None,
+               remove_stopwords_flag: bool = False,
+               stopword_languages: Union[str, List[str]] = 'english',
+               custom_stopwords: Optional[Set[str]] = None,
+               min_word_length: int = 2) -> pd.DataFrame:
+    """
+    Load and preprocess the corpus data from CSV file with optional stopword removal.
 
     Args:
         file_path: Path to the corpus CSV file
         encoding: File encoding (if None, will try to detect)
+        remove_stopwords_flag: Whether to remove stopwords from text
+        stopword_languages: Language(s) for stopwords ('english', 'chinese', etc.)
+        custom_stopwords: Additional custom stopwords to remove
+        min_word_length: Minimum length for words to keep after stopword removal
 
     Returns:
         pandas.DataFrame with columns ['ticker', 'year', 'text']
@@ -57,17 +180,25 @@ def load_corpus(file_path: str, encoding: Optional[str] = None) -> pd.DataFrame:
         raise ValueError(f"Could not load file with any of the tried encodings: {encodings}")
 
     # Validate and process the data
-    df = _validate_and_clean_data(df)
+    df = _validate_and_clean_data(df, remove_stopwords_flag, stopword_languages, custom_stopwords, min_word_length)
 
     logger.info(f"Loaded corpus: {len(df)} documents across {df['ticker'].nunique()} companies")
     return df
 
-def _validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
+def _validate_and_clean_data(df: pd.DataFrame,
+                             remove_stopwords_flag: bool = False,
+                             stopword_languages: Union[str, List[str]] = 'english',
+                             custom_stopwords: Optional[Set[str]] = None,
+                             min_word_length: int = 2) -> pd.DataFrame:
     """
-    Validate and clean the loaded data.
+    Validate and clean the loaded data with optional stopword removal.
 
     Args:
         df: Raw dataframe from CSV
+        remove_stopwords_flag: Whether to remove stopwords from text
+        stopword_languages: Language(s) for stopwords
+        custom_stopwords: Additional custom stopwords to remove
+        min_word_length: Minimum length for words to keep after stopword removal
 
     Returns:
         Cleaned and validated dataframe
@@ -111,6 +242,27 @@ def _validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Clean text data
     df['text'] = df['text'].astype(str).str.strip()
+
+    # Apply stopword removal if requested
+    if remove_stopwords_flag:
+        logger.info("Applying stopword removal to text data...")
+        stopwords_set = get_stopwords(stopword_languages, custom_stopwords)
+
+        # Store original text length for statistics
+        original_lengths = df['text'].str.len()
+
+        # Apply stopword removal
+        df['text'] = df['text'].apply(
+            lambda x: remove_stopwords(x, stopwords_set, min_word_length)
+        )
+
+        # Log statistics about stopword removal
+        new_lengths = df['text'].str.len()
+        avg_reduction = ((original_lengths - new_lengths) / original_lengths * 100).mean()
+        logger.info(f"Stopword removal completed:")
+        logger.info(f"  - Average text length reduction: {avg_reduction:.1f}%")
+        logger.info(f"  - Processed {len(df)} documents")
+
     df = df[df['text'].str.len() > 10]  # Remove very short texts
 
     # Clean year data

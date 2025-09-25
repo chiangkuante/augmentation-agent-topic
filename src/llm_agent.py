@@ -9,21 +9,130 @@ import json
 import logging
 import time
 import tiktoken
+import os
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 import openai
 from openai import OpenAI
 import pandas as pd
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+from pathlib import Path
+project_root = Path(__file__).parent.parent
+load_dotenv(project_root / ".env")
 
 # Configuration imports
 import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
-from config.settings import DEFAULT_LLM_MODELS, OPENAI_API_KEY, OPTIMIZER_CONFIG
+sys.path.append(str(project_root))
+from config.settings import DEFAULT_LLM_MODELS, OPTIMIZER_CONFIG
 from config.prompts import get_prompt_template, get_system_prompt
 
 logger = logging.getLogger(__name__)
+
+# JSON Schemas for Structured Outputs
+TOPIC_NAME_SUMMARY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "A concise, descriptive name for this topic (max 5 words)"
+        },
+        "summary": {
+            "type": "string",
+            "description": "A brief summary explaining what this topic represents (max 2 sentences)"
+        }
+    },
+    "required": ["name", "summary"],
+    "additionalProperties": False
+}
+
+TOPIC_QUALITY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "coherence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "How well do the keywords relate to each other and the topic name (1-10)"
+        },
+        "uniqueness": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "How distinct is this topic from other potential topics (1-10)"
+        },
+        "reason": {
+            "type": "string",
+            "description": "Brief explanation of your scoring (max 2 sentences)"
+        }
+    },
+    "required": ["coherence", "uniqueness", "reason"],
+    "additionalProperties": False
+}
+
+OPTIMIZATION_ANALYSIS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "analysis": {
+            "type": "object",
+            "properties": {
+                "similar_topics": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "topic_ids": {
+                                "type": "array",
+                                "items": {"type": "integer"}
+                            },
+                            "similarity_reason": {"type": "string"}
+                        },
+                        "required": ["topic_ids", "similarity_reason"],
+                        "additionalProperties": False
+                    }
+                },
+                "low_quality_topics": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "topic_id": {"type": "integer"},
+                            "quality_issues": {"type": "string"}
+                        },
+                        "required": ["topic_id", "quality_issues"],
+                        "additionalProperties": False
+                    }
+                }
+            },
+            "required": ["similar_topics", "low_quality_topics"],
+            "additionalProperties": False
+        },
+        "recommendations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "type": "string",
+                        "enum": ["MERGE", "SPLIT"]
+                    },
+                    "targets": {
+                        "type": "array",
+                        "items": {"type": "integer"}
+                    },
+                    "reason": {"type": "string"},
+                    "expected_benefit": {"type": "string"}
+                },
+                "required": ["action", "targets", "reason", "expected_benefit"],
+                "additionalProperties": False
+            }
+        }
+    },
+    "required": ["analysis", "recommendations"],
+    "additionalProperties": False
+}
 
 @dataclass
 class CostTracker:
@@ -64,10 +173,9 @@ class LLMAgent:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model_name: str = "gpt-4",
+        model_name: str = "gpt-5",
         temperature: float = 0.1,
         max_retries: int = 3,
-        budget_limit: float = 50.0,
         batch_size: int = 10
     ):
         """
@@ -78,24 +186,27 @@ class LLMAgent:
             model_name: LLM model to use
             temperature: Temperature for generation (0.1 for stability)
             max_retries: Maximum retries for API calls
-            budget_limit: Maximum budget for API calls
             batch_size: Topics per batch for analysis
         """
-        self.api_key = api_key or OPENAI_API_KEY
+        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
         if not self.api_key:
             raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY environment variable.")
+
+        # Validate that only GPT-5 series models are supported
+        if not self._is_gpt5_model(model_name):
+            supported_models = list(DEFAULT_LLM_MODELS.keys())
+            raise ValueError(f"Only GPT-5 series models are supported. Got '{model_name}'. Supported models: {supported_models}")
 
         self.client = OpenAI(api_key=self.api_key)
         self.model_name = model_name
         self.temperature = temperature
         self.max_retries = max_retries
-        self.budget_limit = budget_limit
         self.batch_size = batch_size
 
         # Model configuration
         if model_name not in DEFAULT_LLM_MODELS:
-            logger.warning(f"Model {model_name} not in default configs, using gpt-4 pricing")
-            self.model_config = DEFAULT_LLM_MODELS["gpt-4"]
+            logger.warning(f"Model {model_name} not in default configs, using gpt-5 pricing")
+            self.model_config = DEFAULT_LLM_MODELS["gpt-5"]
         else:
             self.model_config = DEFAULT_LLM_MODELS[model_name]
 
@@ -110,7 +221,11 @@ class LLMAgent:
             self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
         logger.info(f"LLM Agent initialized with model: {model_name}")
-        logger.info(f"Budget limit: ${budget_limit}")
+        logger.info("Budget tracking disabled")
+
+    def _is_gpt5_model(self, model_name: str) -> bool:
+        """Check if the model is a GPT-5 series model."""
+        return model_name.startswith("gpt-5") or model_name in DEFAULT_LLM_MODELS
 
     def get_topic_name_and_summary(self, keywords: List[str]) -> Dict[str, str]:
         """
@@ -125,19 +240,26 @@ class LLMAgent:
         Raises:
             Exception: If API call fails or budget exceeded
         """
-        if self._check_budget_exceeded():
-            raise Exception(f"Budget limit of ${self.budget_limit} exceeded")
+        # Budget checking removed
 
         keywords_str = ", ".join(keywords[:10])  # Limit to top 10 keywords
         prompt = get_prompt_template("naming", keywords=keywords_str)
 
         try:
-            response = self._make_api_call(prompt, max_tokens=200)
+            response = self._make_api_call(prompt, max_tokens=200,
+                                         json_schema=TOPIC_NAME_SUMMARY_SCHEMA,
+                                         schema_name="topic_name_summary")
             result = self._parse_json_response(response)
 
             # Validate response format
             if not isinstance(result, dict) or 'name' not in result or 'summary' not in result:
-                logger.warning("Invalid response format, using fallback")
+                logger.warning("Invalid response format or empty LLM response, using fallback")
+                if not keywords:
+                    # Handle empty keywords list
+                    return {
+                        "name": "Unidentified Topic",
+                        "summary": "This topic could not be properly identified due to lack of keywords."
+                    }
                 return {
                     "name": f"Topic: {keywords[0]} related",
                     "summary": f"This topic focuses on {', '.join(keywords[:3])} and related concepts."
@@ -148,6 +270,11 @@ class LLMAgent:
         except Exception as e:
             logger.error(f"Failed to get topic name and summary: {e}")
             # Return fallback response
+            if not keywords:
+                return {
+                    "name": "Unidentified Topic",
+                    "summary": "This topic could not be properly identified due to an error."
+                }
             return {
                 "name": f"Topic: {keywords[0]} related",
                 "summary": f"This topic focuses on {', '.join(keywords[:3])} and related concepts."
@@ -164,14 +291,15 @@ class LLMAgent:
         Returns:
             Dictionary with 'coherence', 'uniqueness', and 'reason' keys
         """
-        if self._check_budget_exceeded():
-            raise Exception(f"Budget limit of ${self.budget_limit} exceeded")
+        # Budget checking removed
 
         keywords_str = ", ".join(keywords[:10])
         prompt = get_prompt_template("quality", topic_name=topic_name, keywords=keywords_str)
 
         try:
-            response = self._make_api_call(prompt, max_tokens=300)
+            response = self._make_api_call(prompt, max_tokens=300,
+                                         json_schema=TOPIC_QUALITY_SCHEMA,
+                                         schema_name="topic_quality")
             result = self._parse_json_response(response)
 
             # Validate and normalize scores
@@ -207,8 +335,7 @@ class LLMAgent:
         Returns:
             List of action dictionaries with 'action', 'targets', 'reason'
         """
-        if self._check_budget_exceeded():
-            raise Exception(f"Budget limit of ${self.budget_limit} exceeded")
+        # Budget checking removed
 
         logger.info(f"Generating optimization commands for {len(topics_data)} topics")
 
@@ -223,10 +350,7 @@ class LLMAgent:
                 batch_commands = self._process_topic_batch(batch)
                 all_commands.extend(batch_commands)
 
-                # Check budget after each batch
-                if self._check_budget_exceeded():
-                    logger.warning("Budget limit reached, stopping optimization command generation")
-                    break
+                # Budget checking removed
 
             except Exception as e:
                 logger.error(f"Failed to process topic batch {i//self.batch_size + 1}: {e}")
@@ -254,7 +378,9 @@ class LLMAgent:
         prompt = get_prompt_template("batch", topics_batch=topics_str)
 
         try:
-            response = self._make_api_call(prompt, max_tokens=1500)
+            response = self._make_api_call(prompt, max_tokens=1500,
+                                         json_schema=OPTIMIZATION_ANALYSIS_SCHEMA,
+                                         schema_name="optimization_analysis")
             result = self._parse_json_response(response)
 
             # Extract recommendations
@@ -350,43 +476,113 @@ class LLMAgent:
                 "output_cost": 0.0
             }
 
-    def _make_api_call(self, prompt: str, max_tokens: int = 1000) -> str:
-        """Make an API call with retries and error handling."""
+    def _normalize_response_content(self, content: Any) -> str:
+        """Flatten structured response content into plain text."""
+        if content is None:
+            return ""
+
+        if isinstance(content, str):
+            return content.strip()
+
+        if isinstance(content, list):
+            parts: List[str] = []
+            for part in content:
+                part_text = self._normalize_response_content(part)
+                if part_text:
+                    parts.append(part_text)
+            return "\n".join(parts).strip()
+
+        if isinstance(content, dict):
+            # Common OpenAI structures: {"type": "text", "text": "..."}
+            if "text" in content and isinstance(content["text"], (str, list, dict)):
+                return self._normalize_response_content(content["text"])
+
+            # Some reasoning models return {"type": "reasoning", "reasoning": [...]}
+            if "reasoning" in content:
+                return self._normalize_response_content(content["reasoning"])
+
+            if "content" in content:
+                return self._normalize_response_content(content["content"])
+
+            return str(content).strip()
+
+        # Fallback for objects with a "text" attribute (pydantic model objects)
+        text_attr = getattr(content, "text", None)
+        if text_attr is not None:
+            return self._normalize_response_content(text_attr)
+
+        # Last resort: convert to string
+        return str(content).strip()
+
+    def _make_api_call(self, prompt: str, max_tokens: int = 1000, json_schema: Optional[Dict] = None, schema_name: str = "response") -> str:
+        """Make an API call with retries and error handling, supporting structured outputs."""
         system_prompt = get_system_prompt(self.model_name)
 
-        # Estimate cost before making call
-        cost_estimate = self.calculate_tokens_and_cost(system_prompt + prompt)
-        if self.cost_tracker.total_cost + cost_estimate["estimated_cost"] > self.budget_limit:
-            raise Exception(f"Estimated cost would exceed budget limit")
+        # Cost estimation removed
 
         for attempt in range(self.max_retries):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model_name,
-                    messages=[
+                # Use correct parameter name based on model
+                api_params = {
+                    "model": self.model_name,
+                    "messages": [
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=self.temperature,
-                    max_tokens=max_tokens,
-                    timeout=60
-                )
+                    "timeout": 60
+                }
 
-                # Track actual usage
-                usage = response.usage
-                input_tokens = usage.prompt_tokens
-                output_tokens = usage.completion_tokens
+                # Use Responses API for all models
+                # Add JSON schema requirements to prompt for structured output
+                if json_schema:
+                    schema_instruction = f"\n\nIMPORTANT: Respond ONLY with valid JSON matching this exact schema:\n{json.dumps(json_schema, indent=2)}\n\nProvide no other text outside the JSON."
+                    combined_prompt = f"{system_prompt}\n\n{prompt}{schema_instruction}"
+                else:
+                    combined_prompt = f"{system_prompt}\n\n{prompt}"
 
-                actual_cost = (
-                    (input_tokens / 1000) * self.model_config["input_cost_per_1k"] +
-                    (output_tokens / 1000) * self.model_config["output_cost_per_1k"]
-                )
+                response_params = {
+                    "model": self.model_name,
+                    "input": combined_prompt,
+                }
 
-                self.cost_tracker.add_usage(input_tokens, output_tokens, actual_cost)
+                # Set reasoning effort based on GPT-5 model variant
+                if "gpt-5-nano" in self.model_name:
+                    response_params["reasoning"] = {"effort": "minimal"}  # Optimize for speed
+                elif "gpt-5-mini" in self.model_name:
+                    response_params["reasoning"] = {"effort": "low"}  # Balanced for mini
+                else:  # gpt-5 full model
+                    response_params["reasoning"] = {"effort": "medium"}  # Full reasoning
 
-                logger.debug(f"API call successful. Cost: ${actual_cost:.4f}, Total: ${self.cost_tracker.total_cost:.4f}")
+                # Set temperature for all models except GPT-5-nano (it doesn't support temperature)
+                if "gpt-5-nano" not in self.model_name:
+                    response_params["temperature"] = self.temperature
 
-                return response.choices[0].message.content.strip()
+                response = self.client.responses.create(**response_params)
+
+                # Handle Responses API format for all models
+                self._track_usage_and_cost(response)
+
+                # Extract content from Responses API format
+                content = ""
+                if hasattr(response, 'output'):
+                    for item in response.output:
+                        # Skip reasoning items (they have content=None)
+                        if hasattr(item, 'content') and item.content is not None:
+                            for content_item in item.content:
+                                if hasattr(content_item, 'text'):
+                                    content += content_item.text
+
+                # Check for structured output in Responses API
+                if hasattr(response, 'output_parsed') and response.output_parsed:
+                    return json.dumps(response.output_parsed) if not isinstance(response.output_parsed, str) else response.output_parsed
+
+                if not content:
+                    logger.warning(
+                        "Model returned empty content; "
+                        "Raw response: %s", response
+                    )
+
+                return content
 
             except openai.RateLimitError:
                 wait_time = 2 ** attempt
@@ -403,6 +599,29 @@ class LLMAgent:
                     raise
 
         raise Exception(f"Failed to make API call after {self.max_retries} attempts")
+
+    def _track_usage_and_cost(self, response) -> None:
+        """Track API usage and costs from response."""
+        # Handle Responses API format (used for all models now)
+        if hasattr(response, 'usage'):
+            usage = response.usage
+            # Responses API usage format
+            input_tokens = getattr(usage, 'input_tokens', 0)
+            output_tokens = getattr(usage, 'output_tokens', 0)
+            reasoning_tokens = getattr(usage, 'reasoning_tokens', 0)
+            total_output_tokens = output_tokens + reasoning_tokens
+        else:
+            # Fallback: estimate if no usage data available
+            input_tokens = 100  # Conservative estimate
+            total_output_tokens = 50  # Conservative estimate
+
+        actual_cost = (
+            (input_tokens / 1000) * self.model_config["input_cost_per_1k"] +
+            (total_output_tokens / 1000) * self.model_config["output_cost_per_1k"]
+        )
+
+        self.cost_tracker.add_usage(input_tokens, total_output_tokens, actual_cost)
+        logger.debug(f"API call successful. Cost: ${actual_cost:.4f}, Total: ${self.cost_tracker.total_cost:.4f}")
 
     def _parse_json_response(self, response: str) -> Dict[str, Any]:
         """Parse JSON response from LLM with error handling."""
@@ -431,21 +650,12 @@ class LLMAgent:
             raise ValueError(f"Invalid JSON response: {e}")
 
     def _check_budget_exceeded(self) -> bool:
-        """Check if budget limit has been exceeded."""
-        if self.cost_tracker.total_cost >= self.budget_limit:
-            logger.warning(f"Budget limit exceeded: ${self.cost_tracker.total_cost:.2f} >= ${self.budget_limit}")
-            return True
+        """Budget checking disabled."""
         return False
 
     def get_cost_summary(self) -> Dict[str, Any]:
         """Get current cost and usage summary."""
-        summary = self.cost_tracker.get_summary()
-        summary.update({
-            "budget_limit": self.budget_limit,
-            "budget_remaining": max(0, self.budget_limit - self.cost_tracker.total_cost),
-            "budget_used_percent": (self.cost_tracker.total_cost / self.budget_limit) * 100
-        })
-        return summary
+        return self.cost_tracker.get_summary()
 
     def reset_cost_tracker(self):
         """Reset the cost tracker."""
@@ -459,7 +669,7 @@ if __name__ == "__main__":
 
     # Test with sample data (only if API key is available)
     try:
-        agent = LLMAgent(model_name="gpt-3.5-turbo", budget_limit=5.0)
+        agent = LLMAgent(model_name="gpt-5-nano-2025-08-07")
 
         # Test topic naming
         keywords = ["cybersecurity", "threat", "protection", "security", "risk"]

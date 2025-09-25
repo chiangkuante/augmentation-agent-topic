@@ -65,9 +65,8 @@ def map_topics_to_resilience(
     if llm_agent is None:
         try:
             llm_agent = LLMAgent(
-                model_name="gpt-3.5-turbo",  # More cost-effective for classification
+                model_name="gpt-5-nano-2025-08-07",  # Cost-effective for classification
                 temperature=0.1,
-                budget_limit=20.0  # Conservative budget for mapping
             )
         except Exception as e:
             raise ResilienceMappingError(f"Failed to initialize LLM agent: {e}")
@@ -89,10 +88,7 @@ def map_topics_to_resilience(
             batch = topics_df.iloc[i:i + batch_size]
             logger.info(f"Processing batch {i//batch_size + 1}: topics {i} to {min(i+batch_size-1, len(topics_df)-1)}")
 
-            # Check budget before processing batch
-            if llm_agent._check_budget_exceeded():
-                logger.warning("Budget limit reached during resilience mapping")
-                break
+            # Budget checking removed
 
             # Process each topic in the batch
             for _, topic_row in batch.iterrows():

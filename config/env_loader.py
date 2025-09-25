@@ -35,14 +35,8 @@ class EnvironmentLoader:
         """Load environment variables from appropriate .env files."""
         logger.info(f"Loading environment configuration for: {self.env_name}")
 
-        # Priority order for loading .env files:
-        # 1. .env.{environment} (specific environment)
-        # 2. .env.local (local overrides, should be gitignored)
-        # 3. .env (default/fallback)
-
+        # Only use .env file for unified configuration
         env_files = [
-            self.project_root / f".env.{self.env_name}",
-            self.project_root / ".env.local",
             self.project_root / ".env"
         ]
 
@@ -121,7 +115,7 @@ class EnvironmentLoader:
             'max_budget': self.get_env('MAX_API_BUDGET', 50.0, float),
             'budget_warning_threshold': self.get_env('BUDGET_WARNING_THRESHOLD', 0.8, float),
             'budget_emergency_threshold': self.get_env('BUDGET_EMERGENCY_THRESHOLD', 0.95, float),
-            'default_model': self.get_env('DEFAULT_LLM_MODEL', 'gpt-4'),
+            'default_model': self.get_env('DEFAULT_LLM_MODEL', 'gpt-5'),
             'temperature': self.get_env('LLM_TEMPERATURE', 0.1, float),
             'max_retries': self.get_env('MAX_API_RETRIES', 3, int),
             'rate_limit': self.get_env('API_RATE_LIMIT', 60, int),

@@ -11,7 +11,7 @@ import sys
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import warnings
 
 # Suppress warnings for cleaner output
@@ -53,6 +53,12 @@ def setup_logging(log_level: str = "INFO", log_file: Optional[str] = None) -> No
         ]
     )
 
+    # Configure external libraries to be less verbose
+    logging.getLogger('numba').setLevel(logging.ERROR)
+    logging.getLogger('urllib3').setLevel(logging.WARNING)
+    logging.getLogger('transformers').setLevel(logging.WARNING)
+    logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
+
     logger = logging.getLogger(__name__)
     logger.info(f"Logging initialized - Level: {log_level}, File: {log_file}")
 
@@ -62,6 +68,8 @@ def parse_arguments() -> argparse.Namespace:
     api_config = env_loader.get_api_config()
     optimization_config = env_loader.get_optimization_config()
     data_config = env_loader.get_data_config()
+    topic_config = env_loader.get_topic_modeling_config()
+    performance_config = env_loader.get_performance_config()
     logging_config = env_loader.get_logging_config()
 
     parser = argparse.ArgumentParser(
@@ -91,12 +99,38 @@ def parse_arguments() -> argparse.Namespace:
         help="Use a sample of N documents (for testing)"
     )
 
+    # Text preprocessing arguments
+    parser.add_argument(
+        "--remove-stopwords",
+        action="store_true",
+        help="Remove stopwords from text during data loading"
+    )
+    parser.add_argument(
+        "--stopword-languages",
+        type=str,
+        nargs='+',
+        default=['english'],
+        help="Languages for stopwords (e.g., english chinese)"
+    )
+    parser.add_argument(
+        "--custom-stopwords",
+        type=str,
+        nargs='*',
+        help="Additional custom stopwords to remove"
+    )
+    parser.add_argument(
+        "--min-word-length",
+        type=int,
+        default=2,
+        help="Minimum word length to keep after stopword removal"
+    )
+
     # Model arguments
     parser.add_argument(
         "--model",
         type=str,
         default=api_config['default_model'],
-        choices=["gpt-4", "gpt-3.5-turbo", "gpt-4-turbo"],
+        choices=["gpt-5", "gpt-5-mini", "gpt-5-nano-2025-08-07"],
         help="LLM model to use"
     )
     parser.add_argument(
@@ -105,6 +139,13 @@ def parse_arguments() -> argparse.Namespace:
         default=api_config['temperature'],
         help="Temperature for LLM generation (0.0-1.0)"
     )
+    parser.add_argument(
+        "--embedding-model",
+        type=str,
+        default=topic_config.get('embedding_phase', 'phase1'),
+        choices=["phase1", "phase2", "phase3", "modernbert"],
+        help="Embedding model to use (phase1=mpnet, phase2/modernbert=ModernBERT-base, phase3=ModernBERT-large)"
+    )
 
     # Optimization arguments
     parser.add_argument(
@@ -112,12 +153,6 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         default=optimization_config['max_iterations'],
         help="Maximum optimization iterations"
-    )
-    parser.add_argument(
-        "--budget",
-        type=float,
-        default=api_config['max_budget'],
-        help="API budget limit in USD"
     )
     parser.add_argument(
         "--convergence-threshold",
@@ -178,7 +213,12 @@ def parse_arguments() -> argparse.Namespace:
 
     return parser.parse_args()
 
-def load_and_validate_data(data_file: str, sample_size: Optional[int] = None) -> tuple:
+def load_and_validate_data(data_file: str,
+                          sample_size: Optional[int] = None,
+                          remove_stopwords: bool = False,
+                          stopword_languages: List[str] = ['english'],
+                          custom_stopwords: Optional[List[str]] = None,
+                          min_word_length: int = 2) -> tuple:
     """Load and validate corpus data."""
     logger = logging.getLogger(__name__)
 
@@ -189,8 +229,15 @@ def load_and_validate_data(data_file: str, sample_size: Optional[int] = None) ->
 
     logger.info(f"Loading corpus data from: {data_file}")
 
-    # Load corpus
-    corpus_df = load_corpus(data_file)
+    # Load corpus with optional stopword removal
+    custom_stopwords_set = set(custom_stopwords) if custom_stopwords else None
+    corpus_df = load_corpus(
+        data_file,
+        remove_stopwords_flag=remove_stopwords,
+        stopword_languages=stopword_languages,
+        custom_stopwords=custom_stopwords_set,
+        min_word_length=min_word_length
+    )
     logger.info(f"Loaded {len(corpus_df)} documents")
 
     # Get statistics
@@ -218,10 +265,17 @@ def run_topic_modeling(documents: list, args: argparse.Namespace) -> tuple:
 
     logger.info("Starting initial topic modeling...")
 
-    # Create initial topics
+    # Get performance configuration
+    performance_config = env_loader.get_performance_config()
+
+    # Create initial topics with specified embedding model
     topic_model, topics_df, metadata = create_initial_topics(
         documents,
-        model_phase="phase1"  # MVP uses proven sentence-transformers
+        model_phase=args.embedding_model,
+        use_gpu=performance_config.get('use_gpu', False),
+        batch_size=performance_config.get('embedding_batch_size', 32),
+        stopword_languages=args.stopword_languages,
+        custom_stopwords=set(args.custom_stopwords) if args.custom_stopwords else None
     )
 
     logger.info(f"Initial topic modeling completed:")
@@ -248,7 +302,6 @@ def run_optimization(
     # Initialize optimizer
     optimizer = Optimizer(
         max_iterations=args.max_iterations,
-        api_budget_limit=args.budget,
         temperature=args.temperature,
         model_name=args.model,
         convergence_threshold=args.convergence_threshold,
@@ -256,8 +309,13 @@ def run_optimization(
         save_checkpoints=args.save_intermediate
     )
 
-    # Run optimization
-    result = optimizer.run(documents)
+    # Run optimization with existing model
+    result = optimizer.run(
+        documents,
+        initial_model=topic_model,
+        initial_topics_df=topics_df,
+        model_phase=args.embedding_model
+    )
 
     if result.success:
         logger.info("Optimization completed successfully:")
@@ -288,9 +346,8 @@ def run_resilience_analysis(
     try:
         # Initialize LLM agent for resilience mapping
         llm_agent = LLMAgent(
-            model_name="gpt-3.5-turbo",  # More cost-effective for classification
+            model_name="gpt-5-nano-2025-08-07",  # Cost-effective for classification
             temperature=0.1,
-            budget_limit=min(20.0, args.budget * 0.4)  # Reserve budget for mapping
         )
 
         # Map topics to resilience dimensions
@@ -443,7 +500,6 @@ def create_summary_report(
                 "timestamp": datetime.now().isoformat(),
                 "data_file": args.data_file,
                 "model_used": args.model,
-                "total_budget": args.budget,
                 "sample_size": args.sample_size
             },
             "data_summary": {
@@ -466,7 +522,6 @@ def create_summary_report(
                 "quality_improvement": optimization_metadata.get('improvement', 0),
                 "api_cost": optimization_metadata.get('cost_summary', {}).get('total_cost', 0),
                 "converged": optimization_metadata.get('converged', False),
-                "budget_exceeded": optimization_metadata.get('budget_exceeded', False)
             }
 
         # Add resilience analysis summary
@@ -491,9 +546,7 @@ def create_summary_report(
             total_cost += resilience_metadata.get('cost_summary', {}).get('total_cost', 0)
 
         report["cost_summary"] = {
-            "total_api_cost": total_cost,
-            "budget_used_percent": (total_cost / args.budget) * 100,
-            "budget_remaining": max(0, args.budget - total_cost)
+            "total_api_cost": total_cost
         }
 
         # Save report
@@ -560,7 +613,12 @@ def main() -> int:
         # Step 1: Load and validate data
         logger.info("\n=== Step 1: Data Loading ===")
         corpus_df, documents, corpus_stats = load_and_validate_data(
-            args.data_file, args.sample_size
+            args.data_file,
+            args.sample_size,
+            args.remove_stopwords,
+            args.stopword_languages,
+            args.custom_stopwords,
+            args.min_word_length
         )
 
         # Step 2: Initial topic modeling

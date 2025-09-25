@@ -1,20 +1,19 @@
 """
 Configuration settings for the augmentation-agent-topic system.
 
-This module integrates with the environment loader to provide
-configuration management with dotenv support.
+This module uses dotenv to directly load configuration from .env files.
 """
 
 import os
 from pathlib import Path
 from typing import Dict, Any
-from .env_loader import get_env_loader
+from dotenv import load_dotenv
 
-# Initialize environment loader
-env_loader = get_env_loader()
+# Load environment variables from .env file
+PROJECT_ROOT = Path(__file__).parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
 # Project paths
-PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 RESULTS_DIR = PROJECT_ROOT / "results"
 LOGS_DIR = PROJECT_ROOT / "logs"
@@ -29,36 +28,68 @@ LOGS_DIR.mkdir(exist_ok=True)
 (RESULTS_DIR / "resilience").mkdir(exist_ok=True)
 (RESULTS_DIR / "checkpoints").mkdir(exist_ok=True)
 
-# Get configuration from environment
-api_config = env_loader.get_api_config()
-DEFAULT_API_BUDGET = api_config['max_budget']
-OPENAI_API_KEY = api_config['openai_api_key']
+# Get configuration directly from environment variables
+DEFAULT_API_BUDGET = float(os.getenv('OPENAI_API_BUDGET', '50.0'))
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-# Get all configuration from environment
-topic_config = env_loader.get_topic_modeling_config()
-optimization_config = env_loader.get_optimization_config()
-quality_config = env_loader.get_quality_thresholds()
-resilience_config = env_loader.get_resilience_config()
+# Topic Modeling Configuration from environment variables
+topic_config = {
+    'min_topic_size': int(os.getenv('MIN_TOPIC_SIZE', '10')),
+    'umap_config': {
+        'n_neighbors': int(os.getenv('UMAP_N_NEIGHBORS', '15')),
+        'n_components': int(os.getenv('UMAP_N_COMPONENTS', '5')),
+        'metric': os.getenv('UMAP_METRIC', 'cosine'),
+        'min_dist': float(os.getenv('UMAP_MIN_DIST', '0.0'))
+    },
+    'hdbscan_config': {
+        'min_cluster_size': int(os.getenv('HDBSCAN_MIN_CLUSTER_SIZE', '10')),
+        'metric': os.getenv('HDBSCAN_METRIC', 'euclidean'),
+        'cluster_selection_epsilon': float(os.getenv('HDBSCAN_CLUSTER_SELECTION_EPSILON', '0.0'))
+    }
+}
 
-# Model Configuration
+# Optimization Configuration from environment variables
+optimization_config = {
+    'max_iterations': int(os.getenv('MAX_OPTIMIZATION_ITERATIONS', '5')),
+    'convergence_threshold': float(os.getenv('CONVERGENCE_THRESHOLD', '0.02')),
+    'batch_size': int(os.getenv('LLM_BATCH_SIZE', '10'))
+}
+
+# Quality Thresholds from environment variables
+quality_config = {
+    'min_coherence_score': float(os.getenv('MIN_COHERENCE_SCORE', '0.3')),
+    'min_diversity_score': float(os.getenv('MIN_DIVERSITY_SCORE', '0.1')),
+    'min_silhouette_score': float(os.getenv('MIN_SILHOUETTE_SCORE', '0.1'))
+}
+
+# Resilience Configuration from environment variables
+resilience_config = {
+    'dimensions': {
+        'absorb': os.getenv('RESILIENCE_ABSORB_KEYWORDS', 'backup,alternative,stability,resistance,predict,defense').split(','),
+        'adapt': os.getenv('RESILIENCE_ADAPT_KEYWORDS', 'adjust,flexible,reallocation,response,repositioning,adaptation').split(','),
+        'transform': os.getenv('RESILIENCE_TRANSFORM_KEYWORDS', 'redesign,innovation,transformation,ecosystem,fundamental,revolutionary').split(',')
+    }
+}
+
+# Model Configuration - GPT-5 Series Only
 DEFAULT_LLM_MODELS = {
-    "gpt-4": {
-        "name": "gpt-4",
-        "input_cost_per_1k": 0.03,
-        "output_cost_per_1k": 0.06,
-        "context_limit": 8192
-    },
-    "gpt-3.5-turbo": {
-        "name": "gpt-3.5-turbo",
-        "input_cost_per_1k": 0.0015,
-        "output_cost_per_1k": 0.002,
-        "context_limit": 4096
-    },
-    "gpt-4-turbo": {
-        "name": "gpt-4-turbo",
+    "gpt-5": {
+        "name": "gpt-5",
         "input_cost_per_1k": 0.01,
         "output_cost_per_1k": 0.03,
         "context_limit": 128000
+    },
+    "gpt-5-mini": {
+        "name": "gpt-5-mini",
+        "input_cost_per_1k": 0.005,
+        "output_cost_per_1k": 0.015,
+        "context_limit": 64000
+    },
+    "gpt-5-nano-2025-08-07": {
+        "name": "gpt-5-nano-2025-08-07",
+        "input_cost_per_1k": 0.001,
+        "output_cost_per_1k": 0.002,
+        "context_limit": 32000
     }
 }
 
@@ -66,7 +97,8 @@ DEFAULT_LLM_MODELS = {
 EMBEDDING_MODELS = {
     "phase1": "sentence-transformers/all-mpnet-base-v2",  # MVP
     "phase2": "answerdotai/ModernBERT-base",  # Advanced
-    "phase3": "answerdotai/ModernBERT-large"  # Experimental
+    "phase3": "answerdotai/ModernBERT-large",  # Experimental
+    "modernbert": "answerdotai/ModernBERT-base"  # Direct ModernBERT access
 }
 
 # Topic Modeling Configuration (from environment)
@@ -74,7 +106,7 @@ TOPIC_MODEL_CONFIG = {
     "min_topic_size": topic_config['min_topic_size'],
     "nr_topics": None,  # Auto-detect
     "calculate_probabilities": True,
-    "verbose": env_loader.get_logging_config()['verbose']
+    "verbose": os.getenv('VERBOSE', 'false').lower() == 'true'
 }
 
 # UMAP Configuration (from environment)
@@ -94,8 +126,8 @@ HDBSCAN_CONFIG = {
 OPTIMIZER_CONFIG = {
     **optimization_config,
     "api_budget_limit": DEFAULT_API_BUDGET,
-    "temperature": api_config['temperature'],
-    "max_retries": api_config['max_retries']
+    "temperature": float(os.getenv('OPENAI_TEMPERATURE', '0.1')),
+    "max_retries": int(os.getenv('OPENAI_MAX_RETRIES', '3'))
 }
 
 # Quality Metrics Configuration (from environment)
@@ -165,8 +197,18 @@ def get_config() -> Dict[str, Any]:
     }
 
 def validate_config() -> bool:
-    """Validate configuration settings using environment loader."""
-    is_valid, errors = env_loader.validate_config()
+    """Validate configuration settings."""
+    is_valid = True
+    errors = []
+
+    # Validate required environment variables
+    if not OPENAI_API_KEY:
+        errors.append("OPENAI_API_KEY is required")
+        is_valid = False
+
+    if DEFAULT_API_BUDGET <= 0:
+        errors.append("OPENAI_API_BUDGET must be positive")
+        is_valid = False
 
     if not is_valid:
         for error in errors:
@@ -176,27 +218,61 @@ def validate_config() -> bool:
 
 def get_feature_flags() -> Dict[str, bool]:
     """Get feature flags from environment."""
-    return env_loader.get_feature_flags()
+    return {
+        'use_modernbert': os.getenv('USE_MODERNBERT', 'true').lower() == 'true',
+        'enable_stopwords': os.getenv('ENABLE_STOPWORDS', 'true').lower() == 'true',
+        'enable_optimization': os.getenv('ENABLE_OPTIMIZATION', 'true').lower() == 'true',
+        'enable_resilience_mapping': os.getenv('ENABLE_RESILIENCE_MAPPING', 'true').lower() == 'true'
+    }
 
 def get_environment_name() -> str:
     """Get current environment name."""
-    return env_loader.env_name
+    return os.getenv('ENVIRONMENT', 'development')
 
 def reload_config(env_name: str = None) -> None:
-    """Reload configuration with optional environment change."""
-    global env_loader, api_config, topic_config, optimization_config, quality_config, resilience_config
+    """Reload configuration by re-reading environment variables."""
+    global topic_config, optimization_config, quality_config, resilience_config
     global DEFAULT_API_BUDGET, OPENAI_API_KEY
 
-    # Reload environment
-    from .env_loader import load_environment
-    env_loader = load_environment(env_name)
+    # Always use unified .env file
+    load_dotenv(PROJECT_ROOT / ".env", override=True)
 
-    # Reload all configs
-    api_config = env_loader.get_api_config()
-    topic_config = env_loader.get_topic_modeling_config()
-    optimization_config = env_loader.get_optimization_config()
-    quality_config = env_loader.get_quality_thresholds()
-    resilience_config = env_loader.get_resilience_config()
+    # Reload all configuration variables
+    DEFAULT_API_BUDGET = float(os.getenv('OPENAI_API_BUDGET', '50.0'))
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-    DEFAULT_API_BUDGET = api_config['max_budget']
-    OPENAI_API_KEY = api_config['openai_api_key']
+    # Reload configurations (recreate the dictionaries)
+    topic_config = {
+        'min_topic_size': int(os.getenv('MIN_TOPIC_SIZE', '10')),
+        'umap_config': {
+            'n_neighbors': int(os.getenv('UMAP_N_NEIGHBORS', '15')),
+            'n_components': int(os.getenv('UMAP_N_COMPONENTS', '5')),
+            'metric': os.getenv('UMAP_METRIC', 'cosine'),
+            'min_dist': float(os.getenv('UMAP_MIN_DIST', '0.0'))
+        },
+        'hdbscan_config': {
+            'min_cluster_size': int(os.getenv('HDBSCAN_MIN_CLUSTER_SIZE', '10')),
+            'metric': os.getenv('HDBSCAN_METRIC', 'euclidean'),
+            'cluster_selection_epsilon': float(os.getenv('HDBSCAN_CLUSTER_SELECTION_EPSILON', '0.0'))
+        }
+    }
+
+    optimization_config = {
+        'max_iterations': int(os.getenv('MAX_OPTIMIZATION_ITERATIONS', '5')),
+        'convergence_threshold': float(os.getenv('CONVERGENCE_THRESHOLD', '0.02')),
+        'batch_size': int(os.getenv('LLM_BATCH_SIZE', '10'))
+    }
+
+    quality_config = {
+        'min_coherence_score': float(os.getenv('MIN_COHERENCE_SCORE', '0.3')),
+        'min_diversity_score': float(os.getenv('MIN_DIVERSITY_SCORE', '0.1')),
+        'min_silhouette_score': float(os.getenv('MIN_SILHOUETTE_SCORE', '0.1'))
+    }
+
+    resilience_config = {
+        'dimensions': {
+            'absorb': os.getenv('RESILIENCE_ABSORB_KEYWORDS', 'backup,alternative,stability,resistance,predict,defense').split(','),
+            'adapt': os.getenv('RESILIENCE_ADAPT_KEYWORDS', 'adjust,flexible,reallocation,response,repositioning,adaptation').split(','),
+            'transform': os.getenv('RESILIENCE_TRANSFORM_KEYWORDS', 'redesign,innovation,transformation,ecosystem,fundamental,revolutionary').split(',')
+        }
+    }

@@ -74,9 +74,8 @@ class Optimizer:
         max_iterations: int = 5,
         convergence_threshold: float = 0.02,
         quality_history_window: int = 2,
-        api_budget_limit: float = 50.0,
         temperature: float = 0.1,
-        model_name: str = "gpt-4",
+        model_name: str = "gpt-5",
         enable_split: bool = False,  # Phase 1: False, Phase 2: True
         save_checkpoints: bool = True
     ):
@@ -87,7 +86,6 @@ class Optimizer:
             max_iterations: Maximum number of optimization iterations
             convergence_threshold: Minimum improvement threshold for convergence
             quality_history_window: Window size for plateau detection
-            api_budget_limit: Maximum API budget in USD
             temperature: LLM temperature for stable outputs
             model_name: LLM model to use
             enable_split: Whether to enable SPLIT operations (Phase 2)
@@ -96,7 +94,6 @@ class Optimizer:
         self.max_iterations = max_iterations
         self.convergence_threshold = convergence_threshold
         self.quality_history_window = quality_history_window
-        self.api_budget_limit = api_budget_limit
         self.temperature = temperature
         self.model_name = model_name
         self.enable_split = enable_split
@@ -107,7 +104,6 @@ class Optimizer:
             self.llm_agent = LLMAgent(
                 model_name=model_name,
                 temperature=temperature,
-                budget_limit=api_budget_limit,
                 batch_size=OPTIMIZER_CONFIG.get("batch_size", 10)
             )
         except Exception as e:
@@ -123,16 +119,24 @@ class Optimizer:
 
         logger.info(f"Optimizer initialized:")
         logger.info(f"  - Max iterations: {max_iterations}")
-        logger.info(f"  - Budget limit: ${api_budget_limit}")
+        logger.info("  - Budget limit: Disabled")
         logger.info(f"  - Model: {model_name}")
         logger.info(f"  - SPLIT enabled: {enable_split}")
 
-    def run(self, documents: List[str]) -> OptimizationResult:
+    def run(self,
+            documents: List[str],
+            initial_model: Optional[BERTopic] = None,
+            initial_topics_df: Optional[pd.DataFrame] = None,
+            model_phase: str = "phase1"
+           ) -> OptimizationResult:
         """
         Run the complete optimization process.
 
         Args:
             documents: List of documents to analyze
+            initial_model: Pre-trained topic model to optimize (optional)
+            initial_topics_df: Pre-computed topics dataframe (optional)
+            model_phase: Embedding model phase to use if creating new model
 
         Returns:
             OptimizationResult with final model and analysis
@@ -141,17 +145,26 @@ class Optimizer:
         start_time = datetime.now()
 
         try:
-            # Step 1: Create initial topic model
-            logger.info("Step 1: Creating initial topic model...")
-            initial_model, initial_topics_df, initial_metadata = create_initial_topics(
-                documents, model_phase="phase1"
-            )
+            # Step 1: Use existing model or create initial topic model
+            if initial_model is not None and initial_topics_df is not None:
+                logger.info("Step 1: Using provided topic model...")
+                # Calculate metadata for consistency
+                initial_metadata = {
+                    "n_topics": len(initial_model.get_topic_info()) - 1,  # Exclude -1 topic
+                    "model_phase": model_phase
+                }
+            else:
+                logger.info("Step 1: Creating initial topic model...")
+                initial_model, initial_topics_df, initial_metadata = create_initial_topics(
+                    documents, model_phase=model_phase
+                )
 
             # Store embeddings for quality calculations
             # We'll need to regenerate them for consistency
             from sentence_transformers import SentenceTransformer
             from config.settings import EMBEDDING_MODELS
-            embedding_model = SentenceTransformer(EMBEDDING_MODELS["phase1"])
+            embedding_model_name = EMBEDDING_MODELS.get(model_phase, EMBEDDING_MODELS["phase1"])
+            embedding_model = SentenceTransformer(embedding_model_name)
             self.current_embeddings = embedding_model.encode(
                 documents, show_progress_bar=True
             )
@@ -208,7 +221,6 @@ class Optimizer:
                     new_quality = self._calculate_quality_metrics(
                         modified_model, self.current_embeddings, documents, iteration
                     )
-                    self.quality_history.append(new_quality)
 
                     logger.info(f"Iteration {iteration} quality:")
                     logger.info(f"  - Combined score: {new_quality.get_combined_score():.3f}")
@@ -221,8 +233,11 @@ class Optimizer:
                         self.best_quality = new_quality
                         current_model = modified_model
                         current_topics_df = self._extract_topics_dataframe(current_model, documents)
+                        # Only add to history when we actually accept the change
+                        self.quality_history.append(new_quality)
                     else:
                         logger.info("❌ No significant improvement, keeping previous model")
+                        # Do not add rejected changes to quality history
 
                     # Check convergence
                     if self._check_convergence():
@@ -447,8 +462,8 @@ class Optimizer:
         return abs(avg_improvement) < self.convergence_threshold
 
     def _check_budget_exceeded(self) -> bool:
-        """Check if API budget has been exceeded."""
-        return self.llm_agent.cost_tracker.total_cost >= self.api_budget_limit
+        """Budget checking disabled."""
+        return False
 
     def _extract_topics_dataframe(self, model: BERTopic, documents: List[str]) -> pd.DataFrame:
         """Extract topics information as DataFrame."""
@@ -574,8 +589,7 @@ if __name__ == "__main__":
         # Test optimizer (requires OpenAI API key)
         optimizer = Optimizer(
             max_iterations=2,
-            api_budget_limit=5.0,  # Small budget for testing
-            model_name="gpt-3.5-turbo"
+            model_name="gpt-5-nano-2025-08-07"
         )
 
         print("🔄 Testing optimization process...")
