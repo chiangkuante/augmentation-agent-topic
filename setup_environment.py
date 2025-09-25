@@ -31,32 +31,68 @@ def check_python_version() -> bool:
     print(f"✅ Python version: {version.major}.{version.minor}.{version.micro}")
     return True
 
+def detect_package_manager() -> str:
+    """Detect available package manager."""
+    import subprocess
+    import shutil
+
+    managers = []
+
+    # Check for mamba
+    if shutil.which('mamba'):
+        try:
+            result = subprocess.run(['mamba', '--version'],
+                                  capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                managers.append('mamba')
+        except:
+            pass
+
+    # Check for conda
+    if shutil.which('conda'):
+        try:
+            result = subprocess.run(['conda', '--version'],
+                                  capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                managers.append('conda')
+        except:
+            pass
+
+    # Check for pip (always available with Python)
+    if shutil.which('pip'):
+        managers.append('pip')
+
+    return managers
+
 def check_required_packages() -> Dict[str, bool]:
     """Check if required packages are installed."""
     required_packages = [
-        'python-dotenv',
-        'openai',
-        'pandas',
-        'numpy',
-        'scikit-learn',
-        'bertopic',
-        'sentence-transformers',
-        'transformers',
-        'umap-learn',
-        'hdbscan'
+        ('python-dotenv', 'dotenv'),  # (display_name, import_name)
+        ('openai', 'openai'),
+        ('pandas', 'pandas'),
+        ('numpy', 'numpy'),
+        ('scikit-learn', 'sklearn'),
+        ('bertopic', 'bertopic'),
+        ('sentence-transformers', 'sentence_transformers'),
+        ('transformers', 'transformers'),
+        ('umap-learn', 'umap'),
+        ('hdbscan', 'hdbscan'),
+        ('torch', 'torch'),
+        ('plotly', 'plotly'),
+        ('nltk', 'nltk')
     ]
 
     results = {}
     print("\n📦 Checking required packages...")
 
-    for package in required_packages:
+    for display_name, import_name in required_packages:
         try:
-            __import__(package.replace('-', '_'))
-            print(f"  ✅ {package}")
-            results[package] = True
+            __import__(import_name)
+            print(f"  ✅ {display_name}")
+            results[display_name] = True
         except ImportError:
-            print(f"  ❌ {package}")
-            results[package] = False
+            print(f"  ❌ {display_name}")
+            results[display_name] = False
 
     return results
 
@@ -222,6 +258,34 @@ def show_next_steps():
     print("\n📚 For more options:")
     print("   python src/main.py --help")
 
+def suggest_installation_method(missing_packages: list, available_managers: list):
+    """Suggest the best installation method based on available managers."""
+    print(f"\n❌ Missing packages: {', '.join(missing_packages)}")
+    print("\n📋 Installation suggestions:")
+
+    if 'mamba' in available_managers:
+        print("🎯 Recommended (Mamba):")
+        print("  mamba env create -f mamba-environment.yml")
+        print("  mamba activate augmentation-agent-topic")
+        print("\n🔄 Alternative (Mamba + pip):")
+        print("  mamba create -n augmentation-agent-topic python=3.10")
+        print("  mamba activate augmentation-agent-topic")
+        print("  mamba install pandas numpy scikit-learn python-dotenv")
+        print("  pip install bertopic openai transformers")
+
+    elif 'conda' in available_managers:
+        print("🎯 Recommended (Conda):")
+        print("  conda env create -f environment.yml")
+        print("  conda activate augmentation-agent-topic")
+
+    if 'pip' in available_managers:
+        print("🐍 Pure pip installation:")
+        print("  python -m venv venv")
+        print("  # Activate venv (platform dependent)")
+        print("  pip install -r requirements.txt")
+
+    print("\n📚 For detailed instructions, see: INSTALLATION.md")
+
 def main():
     """Main setup function."""
     print_banner()
@@ -230,16 +294,16 @@ def main():
     if not check_python_version():
         sys.exit(1)
 
-    # Step 2: Check packages
+    # Step 2: Detect package managers
+    available_managers = detect_package_manager()
+    print(f"\n🔍 Available package managers: {', '.join(available_managers)}")
+
+    # Step 3: Check packages
     package_results = check_required_packages()
     missing_packages = [pkg for pkg, installed in package_results.items() if not installed]
 
     if missing_packages:
-        print(f"\n❌ Missing packages: {', '.join(missing_packages)}")
-        print("\nInstall them with:")
-        print("  mamba install --file requirements.txt")
-        print("  # or")
-        print("  pip install -r requirements.txt")
+        suggest_installation_method(missing_packages, available_managers)
 
         response = input("\nContinue setup anyway? (y/N): ")
         if response.lower() not in ['y', 'yes']:

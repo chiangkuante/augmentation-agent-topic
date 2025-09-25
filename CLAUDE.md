@@ -26,18 +26,35 @@ This script will:
 - Validate configuration
 
 #### Manual Setup
+
+**📚 For detailed installation options and troubleshooting, see: [INSTALLATION.md](INSTALLATION.md)**
+
 1. **Create conda environment:**
    ```bash
+   # Using mamba (recommended - optimized package resolution)
+   mamba env create -f mamba-environment.yml
+   mamba activate augmentation-agent-topic
+
+   # Or using standard conda
+   conda env create -f environment.yml
+   conda activate augmentation-agent-topic
+
+   # Or create minimal environment
    mamba create -n augmentation-agent-topic python=3.10
    mamba activate augmentation-agent-topic
    ```
 
 2. **Install dependencies:**
    ```bash
-   mamba install --file requirements.txt
-   # or
+   # With mamba (best package compatibility)
+   mamba install -c conda-forge pandas numpy scikit-learn python-dotenv
+   pip install bertopic openai transformers
+
+   # Or with pip only
    pip install -r requirements.txt
    ```
+
+⚠️ **Common Issues:** If you encounter mamba/conda package conflicts or installation errors, check the [troubleshooting section](INSTALLATION.md#-troubleshooting) for solutions.
 
 3. **Environment Configuration:**
    ```bash

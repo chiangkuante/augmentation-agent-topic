@@ -32,14 +32,26 @@ The setup script will:
 
 ### 2. Install Dependencies
 
+**📚 For comprehensive installation instructions and troubleshooting, see: [INSTALLATION.md](INSTALLATION.md)**
+
 ```bash
 # Using mamba (recommended)
-mamba env create -f environment.yml
+mamba env create -f mamba-environment.yml
 mamba activate augmentation-agent-topic
+
+# Or using conda
+conda env create -f environment.yml
+conda activate augmentation-agent-topic
 
 # Or using pip
 pip install -r requirements.txt
 ```
+
+**💡 Having installation issues?** Check the [troubleshooting guide](INSTALLATION.md#-troubleshooting) for solutions to common problems including:
+- Mamba/conda package conflicts
+- PyTorch installation issues
+- BERTopic dependencies
+- Environment variable loading
 
 ### 3. Configure Environment
 

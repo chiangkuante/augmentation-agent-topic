@@ -62,3 +62,6 @@ data/models/
 *.safetensors
 models/
 cache/
+
+#mamba
+mamba*
