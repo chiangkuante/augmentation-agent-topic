@@ -507,13 +507,13 @@ def create_summary_report(
 
 def main() -> int:
     """Main pipeline function."""
+    global env_loader
     try:
         # Parse arguments
         args = parse_arguments()
 
         # Handle environment switching
         if hasattr(args, 'env') and args.env != env_loader.env_name:
-            global env_loader
             from config.env_loader import load_environment
             env_loader = load_environment(args.env)
             from config.settings import reload_config

@@ -23,7 +23,6 @@ import hdbscan
 # BERTopic
 from bertopic import BERTopic
 from bertopic.vectorizers import ClassTfidfTransformer
-from bertopic.representation import KeyBERTInspired
 
 # Configuration
 import sys
@@ -203,15 +202,11 @@ def _create_bertopic_model(**kwargs) -> BERTopic:
     # HDBSCAN for clustering
     hdbscan_model = hdbscan.HDBSCAN(**HDBSCAN_CONFIG)
 
-    # Enhanced representation model for better topic descriptions
-    representation_model = KeyBERTInspired()
-
-    # Create BERTopic model
+    # Create BERTopic model without representation model for initial stability
     topic_model = BERTopic(
         umap_model=umap_model,
         hdbscan_model=hdbscan_model,
-        representation_model=representation_model,
-        top_k_words=10,
+        top_n_words=10,
         verbose=config.get("verbose", True),
         calculate_probabilities=config.get("calculate_probabilities", True),
         nr_topics=config.get("nr_topics", None),
@@ -247,6 +242,12 @@ def _extract_topic_info(topic_model: BERTopic, documents: List[str], topics: Lis
         enriched_topics.append(topic_data)
 
     topics_df = pd.DataFrame(enriched_topics)
+
+    if topics_df.empty:
+        logger.warning("No valid topics found (all documents may be outliers)")
+        # Return empty DataFrame with expected columns
+        return pd.DataFrame(columns=['topic_id', 'name', 'keywords', 'keyword_scores',
+                                   'document_count', 'document_percentage', 'representative_docs', 'avg_doc_length'])
 
     # Sort by document count descending
     topics_df = topics_df.sort_values('document_count', ascending=False).reset_index(drop=True)
