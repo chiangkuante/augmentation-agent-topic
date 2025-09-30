@@ -1,0 +1,18 @@
+name: augmentation-agent-topic
+channels:
+  - conda-forge
+dependencies:
+  - bertopic
+  - hdbscan
+  - ipykernel
+  - numpy
+  - openai
+  - pandas
+  - python-dotenv
+  - scikit-learn
+  - tiktoken
+  - umap-learn
+  - pip:
+    - sec-edgar-downloader==5.0.3
+
+prefix: "/home/wa1ter/miniforge3/envs/augmentation-agent-topic"
