@@ -59,3 +59,8 @@ data/models/
 *.safetensors
 models/
 cache/
+
+
+# data
+data/*
+!data/corpus.csv

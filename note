@@ -1,6 +1,0 @@
-EMBED_MODEL = config.get("EMBED_MODEL")
-EMBED_DIM = int(config.get("EMBED_DIM"))
-BATCH_SIZE = int(config.get("BATCH_SIZE"))
-print(f"使用的 Embedding 模型: {EMBED_MODEL}")
-print(f"Embedding 向量維度: {EMBED_DIM}")
-print(f"批次處理大小: {BATCH_SIZE}")
