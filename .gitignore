@@ -62,7 +62,7 @@ cache/
 
 
 # data
-data/*
+.data/
 
 # AI
 .claude/

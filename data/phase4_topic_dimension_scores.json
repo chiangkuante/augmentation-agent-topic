@@ -1,0 +1,1829 @@
+{
+  "0": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "1": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "2": {
+    "ITC": 3.0,
+    "ACAP": 4.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 4.0,
+    "OTHER": 4.0
+  },
+  "3": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "4": {
+    "ITC": 0,
+    "ACAP": 4.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "5": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "6": {
+    "ITC": 3.0,
+    "ACAP": 4.0,
+    "DC": 3.0,
+    "GOVSEC": 5,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 4.0
+  },
+  "7": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "8": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "9": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "10": {
+    "ITC": 5,
+    "ACAP": 5,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 5
+  },
+  "11": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 0,
+    "OTHER": 0
+  },
+  "12": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "13": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "14": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "15": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "16": {
+    "ITC": 2.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "17": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "18": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "19": {
+    "ITC": 2.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "20": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "21": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 3.0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "22": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "23": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "24": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "25": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "26": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "27": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "28": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "29": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "30": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "31": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "32": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "33": {
+    "ITC": 3.0,
+    "ACAP": 0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "34": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "35": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "36": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "37": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 4.0
+  },
+  "38": {
+    "ITC": 3.0,
+    "ACAP": 5,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 5
+  },
+  "39": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "40": {
+    "ITC": 1.0,
+    "ACAP": 5,
+    "DC": 2.0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "41": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 5,
+    "GOVSEC": 5,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "42": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "43": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 1.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "44": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "45": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "46": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "47": {
+    "ITC": 2.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "48": {
+    "ITC": 3.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 5,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "49": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "50": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "51": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "52": {
+    "ITC": 1.0,
+    "ACAP": 4.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "53": {
+    "ITC": 4.0,
+    "ACAP": 4.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "54": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "55": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "56": {
+    "ITC": 0,
+    "ACAP": 5,
+    "DC": 0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "57": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "58": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "59": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "60": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "61": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "62": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "63": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "64": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "65": {
+    "ITC": 4.0,
+    "ACAP": 4.0,
+    "DC": 2.0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "66": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 2.0
+  },
+  "67": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "68": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 1.0,
+    "OTHER": 1.0
+  },
+  "69": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "70": {
+    "ITC": 0,
+    "ACAP": 4.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "71": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 4.0
+  },
+  "72": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "73": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 4.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "74": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 0,
+    "ECO": 1.0,
+    "OTHER": 2.0
+  },
+  "75": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 1.0
+  },
+  "76": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "77": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "78": {
+    "ITC": 3.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 2.0
+  },
+  "79": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "80": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "81": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 4.0
+  },
+  "82": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 1.0
+  },
+  "83": {
+    "ITC": 3.0,
+    "ACAP": 4.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "84": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "85": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "86": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "87": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "88": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "89": {
+    "ITC": 2.0,
+    "ACAP": 4.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "90": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 3.0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "91": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "92": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "93": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "94": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "95": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "96": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "97": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "98": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "99": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 2.0
+  },
+  "100": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "101": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 1.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 4.0
+  },
+  "102": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "103": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 1.0
+  },
+  "104": {
+    "ITC": 5,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "105": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 2.0
+  },
+  "106": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "107": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "108": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "109": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "110": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "111": {
+    "ITC": 1.0,
+    "ACAP": 4.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 5
+  },
+  "112": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "113": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "114": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 5,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "115": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "116": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "117": {
+    "ITC": 2.0,
+    "ACAP": 1.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "118": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "119": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "120": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 5,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "121": {
+    "ITC": 1.0,
+    "ACAP": 4.0,
+    "DC": 3.0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "122": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 5
+  },
+  "123": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 0,
+    "ECO": 0,
+    "OTHER": 0
+  },
+  "124": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 4.5,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "125": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "126": {
+    "ITC": 3.0,
+    "ACAP": 5,
+    "DC": 5,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 5
+  },
+  "127": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "128": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "129": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 0,
+    "OTHER": 0
+  },
+  "130": {
+    "ITC": 2.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "131": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "132": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 0,
+    "ECO": 1.0,
+    "OTHER": 0
+  },
+  "133": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "134": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 2.0,
+    "GOVSEC": 1.0,
+    "DATA": 5,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "135": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 1.0
+  },
+  "136": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "137": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "138": {
+    "ITC": 2.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 1.0
+  },
+  "139": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 1.0
+  },
+  "140": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "141": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 4.0
+  },
+  "142": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "143": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "144": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "145": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "146": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "147": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 0,
+    "ECO": 0,
+    "OTHER": 1.0
+  },
+  "148": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "149": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "150": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "151": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "152": {
+    "ITC": 0,
+    "ACAP": 4.0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 1.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "153": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "154": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "155": {
+    "ITC": 3.0,
+    "ACAP": 4.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "156": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 5,
+    "GOVSEC": 1.0,
+    "DATA": 1.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "157": {
+    "ITC": 2.0,
+    "ACAP": 4.0,
+    "DC": 5,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "158": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "159": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "160": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 0,
+    "DATA": 0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "161": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "162": {
+    "ITC": 2.0,
+    "ACAP": 4.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "163": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "164": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "165": {
+    "ITC": 2.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "166": {
+    "ITC": 2.0,
+    "ACAP": 4.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "167": {
+    "ITC": 2.0,
+    "ACAP": 5,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "168": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "169": {
+    "ITC": 0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 2.0,
+    "OTHER": 0
+  },
+  "170": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 4.0,
+    "ECO": 2.0,
+    "OTHER": 3.0
+  },
+  "171": {
+    "ITC": 3.0,
+    "ACAP": 4.0,
+    "DC": 3.0,
+    "GOVSEC": 0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 5
+  },
+  "172": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 0,
+    "DATA": 1.0,
+    "ECO": 5,
+    "OTHER": 1.0
+  },
+  "173": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "174": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "175": {
+    "ITC": 1.0,
+    "ACAP": 4.0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "176": {
+    "ITC": 0,
+    "ACAP": 1.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "177": {
+    "ITC": 1.0,
+    "ACAP": 5,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 5
+  },
+  "178": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 4.0,
+    "ECO": 5,
+    "OTHER": 0
+  },
+  "179": {
+    "ITC": 3.0,
+    "ACAP": 1.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "180": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 1.0
+  },
+  "181": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 2.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "182": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "183": {
+    "ITC": 2.0,
+    "ACAP": 3.0,
+    "DC": 2.0,
+    "GOVSEC": 2.0,
+    "DATA": 1.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "184": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  },
+  "185": {
+    "ITC": 3.0,
+    "ACAP": 2.0,
+    "DC": 3.0,
+    "GOVSEC": 3.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "186": {
+    "ITC": 2.0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "187": {
+    "ITC": 4.0,
+    "ACAP": 3.0,
+    "DC": 3.0,
+    "GOVSEC": 5,
+    "DATA": 4.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "188": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 1.0,
+    "DATA": 5,
+    "ECO": 4.0,
+    "OTHER": 2.0
+  },
+  "189": {
+    "ITC": 1.0,
+    "ACAP": 0,
+    "DC": 0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "190": {
+    "ITC": 1.0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "191": {
+    "ITC": 0,
+    "ACAP": 4.0,
+    "DC": 2.0,
+    "GOVSEC": 4.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 4.0
+  },
+  "192": {
+    "ITC": 1.0,
+    "ACAP": 2.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 3.0,
+    "ECO": 4.0,
+    "OTHER": 0
+  },
+  "193": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 0,
+    "GOVSEC": 3.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "194": {
+    "ITC": 2.0,
+    "ACAP": 1.0,
+    "DC": 3.0,
+    "GOVSEC": 1.0,
+    "DATA": 2.0,
+    "ECO": 3.0,
+    "OTHER": 3.0
+  },
+  "195": {
+    "ITC": 4.0,
+    "ACAP": 2.0,
+    "DC": 2.0,
+    "GOVSEC": 3.0,
+    "DATA": 4.0,
+    "ECO": 4.0,
+    "OTHER": 3.0
+  },
+  "196": {
+    "ITC": 0,
+    "ACAP": 2.0,
+    "DC": 1.0,
+    "GOVSEC": 3.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 1.0
+  },
+  "197": {
+    "ITC": 1.0,
+    "ACAP": 1.0,
+    "DC": 1.0,
+    "GOVSEC": 2.0,
+    "DATA": 0,
+    "ECO": 2.0,
+    "OTHER": 2.0
+  },
+  "198": {
+    "ITC": 3.0,
+    "ACAP": 3.0,
+    "DC": 4.0,
+    "GOVSEC": 4.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 4.0
+  },
+  "199": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 0,
+    "GOVSEC": 2.0,
+    "DATA": 5,
+    "ECO": 5,
+    "OTHER": 3.0
+  },
+  "200": {
+    "ITC": 2.0,
+    "ACAP": 0,
+    "DC": 1.0,
+    "GOVSEC": 4.0,
+    "DATA": 5,
+    "ECO": 3.0,
+    "OTHER": 0
+  },
+  "201": {
+    "ITC": 2.0,
+    "ACAP": 5,
+    "DC": 4.0,
+    "GOVSEC": 1.0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 5
+  },
+  "202": {
+    "ITC": 0,
+    "ACAP": 3.0,
+    "DC": 1.0,
+    "GOVSEC": 0,
+    "DATA": 3.0,
+    "ECO": 3.0,
+    "OTHER": 2.0
+  }
+}

@@ -1,0 +1,93 @@
+[
+  {
+    "iteration": 0,
+    "iteration_type": "BASELINE",
+    "metrics_before": {
+      "cohesion": 0.772103934603579,
+      "separation": 0.40636885166168213,
+      "silhouette": 0.07708462327718735,
+      "outlier_rate": 0.16524947858174233
+    },
+    "metrics_after": {
+      "cohesion": 0.772103934603579,
+      "separation": 0.40636885166168213,
+      "silhouette": 0.07708462327718735,
+      "outlier_rate": 0.16524947858174233
+    },
+    "actions_taken": {},
+    "params_used": {
+      "hdbscan_params": {
+        "min_cluster_size": 30,
+        "min_samples": 10
+      },
+      "umap_params": {
+        "n_neighbors": 15,
+        "n_components": 10
+      }
+    }
+  },
+  {
+    "iteration": 1,
+    "iteration_type": "MICRO",
+    "metrics_before": {
+      "cohesion": 0.772103934603579,
+      "separation": 0.40636885166168213,
+      "silhouette": 0.07708462327718735,
+      "outlier_rate": 0.16524947858174233
+    },
+    "metrics_after": {
+      "cohesion": 0.7705560711713938,
+      "separation": 0.40360569953918457,
+      "silhouette": 0.07049090415239334,
+      "outlier_rate": 0.16524947858174233
+    },
+    "actions_taken": {
+      "merge": 3,
+      "split": 0,
+      "stopwords": 23,
+      "rename": 30,
+      "type": "MICRO"
+    },
+    "params_used": {
+      "hdbscan_params": {
+        "min_cluster_size": 30,
+        "min_samples": 10
+      },
+      "umap_params": {
+        "n_neighbors": 15,
+        "n_components": 10
+      }
+    },
+    "decision_reason": "整體指標尚可，離群率低於20%，輪廓係數大於0.05，適合進行細部主題微調以提升主題可解釋性，且無近期宏觀調整需穩定。"
+  },
+  {
+    "iteration": 2,
+    "iteration_type": "MICRO",
+    "metrics_before": {
+      "cohesion": 0.7705560711713938,
+      "separation": 0.40360569953918457,
+      "silhouette": 0.07049090415239334,
+      "outlier_rate": 0.16524947858174233
+    },
+    "metrics_after": {
+      "cohesion": 0.7705560711713938,
+      "separation": 0.40360569953918457,
+      "silhouette": 0.07049090415239334,
+      "outlier_rate": 0.16524947858174233
+    },
+    "actions_taken": {
+      "type": "MICRO"
+    },
+    "params_used": {
+      "hdbscan_params": {
+        "min_cluster_size": 30,
+        "min_samples": 10
+      },
+      "umap_params": {
+        "n_neighbors": 15,
+        "n_components": 10
+      }
+    },
+    "decision_reason": "整體指標尚在可接受範圍內（離群率16.52%，輪廓係數0.0705），且最近一次MICRO調整未顯著改善輪廓分數，建議持續進行細節微調以提升主題解釋力，避免過度破壞全局結構。"
+  }
+]
